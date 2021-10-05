@@ -18,3 +18,4 @@ Next steps/improvements:
  - Add the production stage in the configurations
  - Improve the logging to have a better tracing.
  - Create some cloudwatch alarms. Ex.; For the third-party service consumer.
+ - Set up an authentication/authorization method.
