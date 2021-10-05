@@ -1,0 +1,103 @@
+service: product-api
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  iam:
+    role:
+      statements: # permissions for all of your functions can be set here
+        - Effect: Allow
+          Action: # Gives permission to DynamoDB tables in a specific region
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: 'arn:aws:dynamodb:us-east-1:*:*'
+
+functions:
+  productsApiPost:
+    handler: src/LambdaFunctions/productsApiPost.productsApiPost
+    description: Lambda function for the productsApi
+    memorySize: 256
+    events:
+      - http:
+          path: /products
+          method: post
+          cors: true
+  productsApiDelete:
+    handler: src/LambdaFunctions/productsApiDelete.productsApiDelete
+    description: Lambda function for the productsApi
+    memorySize: 256
+    events:
+      - http:
+          path: /products/{id}
+          method: delete
+          cors: true
+  productsApiUpdate:
+    handler: src/LambdaFunctions/productsApiUpdate.productsApiUpdate
+    description: Lambda function for the productsApi
+    memorySize: 256
+    events:
+      - http:
+          path: /products/{id}
+          method: put
+          cors: true
+  productsApiGet:
+    handler: src/LambdaFunctions/productsApiGet.productsApiGet
+    description: Lambda function for the productsApi
+    memorySize: 256
+    events:
+      - http:
+          path: /products/{id}
+          method: get
+          cors: true
+      - http:
+          path: /products
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Products
+        BillingMode: PROVISIONED
+        ProvisionedThroughput:
+          ReadCapacityUnits: "5"
+          WriteCapacityUnits: "5"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: S
+
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true        
+
+        
+
