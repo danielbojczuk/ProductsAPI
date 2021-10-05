@@ -12,12 +12,18 @@ export class LambdaReturn {
     }
 
     static returnOk(content:any|null = null) {
+        let responseContent:any;
+        if(content == null) {
+            responseContent = "";
+        } else {
+            responseContent = content;
+        }
         return {
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
             statusCode: 200,
-            body: JSON.stringify(content),
+            body: JSON.stringify(responseContent),
         }
     }
 
@@ -27,7 +33,7 @@ export class LambdaReturn {
                 'Access-Control-Allow-Origin': '*',
             },
             statusCode: 404,
-            body: JSON.stringify({}),
+            body: JSON.stringify({"message":"Resource not found."}),
         }
     }
 
@@ -44,7 +50,7 @@ export class LambdaReturn {
                 'Access-Control-Allow-Origin': '*',
             },
             statusCode: returnStatusCode,
-            body: JSON.stringify(returnMessage),
+            body: JSON.stringify({"message": returnMessage}),
         }
     }
 }
