@@ -17,3 +17,4 @@ Next steps/improvements:
  - Create some integration tests
  - Add the production stage in the configurations
  - Improve the logging to have a better tracing.
+ - Create some cloudwatch alarms. Ex.; For the third-party service consumer.
