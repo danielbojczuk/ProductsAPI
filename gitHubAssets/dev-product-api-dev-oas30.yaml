@@ -1,0 +1,97 @@
+openapi: "3.0.1"
+info:
+  title: "dev-product-api"
+  version: "2021-10-05T15:01:42Z"
+servers:
+- url: "https://f3bakgi7u1.execute-api.us-east-1.amazonaws.com/dev/"
+paths:
+  /products/{id}:
+    get: 
+      summary: Returns a product by id
+      responses:
+        "200":
+          description: A product JSON object 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Product"
+    put:
+      summary: Update a product by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  description: Product description
+                  type: string
+                price:
+                  description: Product price
+                  type: number 
+      responses:
+        "200":
+          description: Product updated.
+        "404":
+          description: Product not found.
+    delete: 
+      summary: Delete a product by id
+      responses:
+        "200":
+          description: Product deleted.
+        "404":
+          description: Product not found.
+  /products:
+    get:
+      summary: Returns the list of products
+      responses:
+        "200":
+          description: A product JSON array 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+    post: 
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  description: Product description
+                  type: string
+                price:
+                  description: Product price
+                  type: number              
+      responses:
+        "201":
+          description: Product created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+components: 
+  schemas:
+    Product:
+      title: "Product Schema"
+      type: "object"
+      properties:
+        id:
+          description: Product identifier
+          type: string
+        description:
+          description: Product description
+          type: string
+        price:
+          description: Product price
+          type: number
+    Products:
+      title: "Products Schema"
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Product"
+
